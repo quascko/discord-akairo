@@ -1,7 +1,7 @@
 {
-    "name": "discord-akairo",
+    "name": "@cataclym/discord-akairo",
     "version": "8.1.0",
-    "description": "A highly customizable bot framework for Discord.js.",
+    "description": "A highly customizable bot framework for Discord.js. A fork to fix 'handleedits'.",
     "main": "./src/index.js",
     "types": "./src/index.d.ts",
     "author": "1Computer",
@@ -33,7 +33,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/discord-akairo/discord-akairo.git"
+        "url": "https://gitlab.com/cataclym/discord-akairo"
     },
     "bugs": {
         "url": "https://github.com/discord-akairo/discord-akairo/issues"
