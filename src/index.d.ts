@@ -1,4 +1,4 @@
-declare module '@cataclym/discord-akairo' {
+declare module 'discord-akairo' {
     import {
         BufferResolvable, Client, ClientOptions, Collection,
         Message, MessageAttachment, MessageEmbed,
