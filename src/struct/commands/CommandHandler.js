@@ -124,7 +124,7 @@ class CommandHandler extends AkairoHandler {
          */
         this.commandUtilSweepInterval = commandUtilSweepInterval;
         if (this.commandUtilSweepInterval > 0) {
-            this.client.setInterval(() => this.sweepCommandUtil(), this.commandUtilSweepInterval);
+            setInterval(() => this.sweepCommandUtil(), this.commandUtilSweepInterval).unref();
         }
 
         /**
@@ -222,7 +222,7 @@ class CommandHandler extends AkairoHandler {
 
     setup() {
         this.client.once('ready', () => {
-            this.client.on('message', async m => {
+            this.client.on('messageCreate', async m => {
                 if (m.partial) await m.fetch();
                 this.handle(m);
             });
@@ -339,7 +339,7 @@ class CommandHandler extends AkairoHandler {
      */
     async handle(message) {
         try {
-            if (this.fetchMembers && message.guild && !message.member && !message.webhookID) {
+            if (this.fetchMembers && message.guild && !message.member && !message.webhookId) {
                 await message.guild.members.fetch(message.author);
             }
 
@@ -722,16 +722,16 @@ class CommandHandler extends AkairoHandler {
 
         if (!this.cooldowns.get(id)[command.id]) {
             this.cooldowns.get(id)[command.id] = {
-                timer: this.client.setTimeout(() => {
+                timer: setTimeout(() => {
                     if (this.cooldowns.get(id)[command.id]) {
-                        this.client.clearTimeout(this.cooldowns.get(id)[command.id].timer);
+                        clearTimeout(this.cooldowns.get(id)[command.id].timer);
                     }
                     this.cooldowns.get(id)[command.id] = null;
 
                     if (!Object.keys(this.cooldowns.get(id)).length) {
                         this.cooldowns.delete(id);
                     }
-                }, time),
+                }, time).unref(),
                 end: endTime,
                 uses: 0
             };
@@ -760,18 +760,12 @@ class CommandHandler extends AkairoHandler {
      */
     async runCommand(message, command, args) {
         if (command.typing) {
-            message.channel.startTyping();
+            message.channel.sendTyping();
         }
 
-        try {
-            this.emit(CommandHandlerEvents.COMMAND_STARTED, message, command, args);
-            const ret = await command.exec(message, args);
-            this.emit(CommandHandlerEvents.COMMAND_FINISHED, message, command, args, ret);
-        } finally {
-            if (command.typing) {
-                message.channel.stopTyping();
-            }
-        }
+        this.emit(CommandHandlerEvents.COMMAND_STARTED, message, command, args);
+        const ret = await command.exec(message, args);
+        this.emit(CommandHandlerEvents.COMMAND_FINISHED, message, command, args, ret);
     }
 
     /**
@@ -780,8 +774,8 @@ class CommandHandler extends AkairoHandler {
      * @returns {Promise<ParsedComponentData>}
      */
     async parseCommand(message) {
-        let prefixes = intoArray(await intoCallable(this.prefix)(message));
         const allowMention = await intoCallable(this.prefix)(message);
+        let prefixes = intoArray(allowMention);
         if (allowMention) {
             const mentions = [`<@${this.client.user.id}>`, `<@!${this.client.user.id}>`];
             prefixes = [...mentions, ...prefixes];
@@ -877,7 +871,6 @@ class CommandHandler extends AkairoHandler {
      * @returns {void}
      */
     emitError(err, message, command) {
-        if (command && command.typing) message.channel.stopTyping();
         if (this.listenerCount(CommandHandlerEvents.ERROR)) {
             this.emit(CommandHandlerEvents.ERROR, err, message, command);
             return;
@@ -1036,7 +1029,7 @@ module.exports = CommandHandler;
  */
 
 /**
- * Emitted when a message does not start with the prefix or match a command.
+ * Emitted when no command has been run.
  * @event CommandHandler#messageInvalid
  * @param {Message} message - Message sent.
  */

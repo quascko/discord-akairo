@@ -351,8 +351,8 @@ class ClientUtil {
      * @returns {number}
      */
     compareStreaming(oldMember, newMember) {
-        const s1 = oldMember.presence.activity && oldMember.presence.activity.type === 'STREAMING';
-        const s2 = newMember.presence.activity && newMember.presence.activity.type === 'STREAMING';
+        const s1 = oldMember.presence?.activities.find(c => c.type === 'STREAMING');
+        const s2 = newMember.presence?.activities.find(c => c.type === 'STREAMING');
         if (s1 === s2) return 0;
         if (s1) return 1;
         if (s2) return 2;
@@ -360,7 +360,7 @@ class ClientUtil {
     }
 
     /**
-     * Combination of `<Client>.fetchUser()` and `<Guild>.fetchMember()`.
+     * Combination of `<Client>.users.fetch()` and `<Guild>.members.fetch()`.
      * @param {Guild} guild - Guild to fetch in.
      * @param {string} id - ID of the user.
      * @param {boolean} cache - Whether or not to add to cache.
