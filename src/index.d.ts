@@ -649,7 +649,7 @@ declare module '@cataclym/discord-akairo' {
 
     export type ArgumentType = 'string' | 'lowercase' | 'uppercase' | 'charCodes'
         | 'number' | 'integer' | 'bigint' | 'emojint'
-        | 'url' | 'date' | 'color'
+        | 'url' | 'date' | 'color' | 'timespan'
         | 'user' | 'users' | 'member' | 'members' | 'relevant' | 'relevants'
         | 'channel' | 'channels' | 'textChannel' | 'textChannels' | 'voiceChannel' | 'voiceChannels' | 'categoryChannel' | 'categoryChannels' | 'newsChannel' | 'newsChannels' | 'storeChannel' | 'storeChannels'
         | 'role' | 'roles' | 'emoji' | 'emojis' | 'guild' | 'guilds'
@@ -722,6 +722,7 @@ declare module '@cataclym/discord-akairo' {
             URL: 'url';
             DATE: 'date';
             COLOR: 'color';
+            TIMESPAN: 'timespan';
             USER: 'user';
             USERS: 'users';
             MEMBER: 'member';
@@ -781,6 +782,40 @@ declare module '@cataclym/discord-akairo' {
             OWNER: 'owner';
             GUILD: 'guild';
             DM: 'dm';
+        };
+        TimeUnits: {
+            years: {
+                label: string,
+                value: number,
+            },
+            months: {
+                label: string,
+                value: number,
+            },
+            weeks: {
+                label: string,
+                value: number,
+            },
+            days: {
+                label: string,
+                value: number,
+            },
+            hours: {
+                label: string,
+                value: number,
+            },
+            minutes: {
+                label: string,
+                value: number,
+            },
+            seconds: {
+                label: string,
+                value: number,
+            },
+            milliseconds: {
+                label: string,
+                value: number,
+            },
         };
     };
 
